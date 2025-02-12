@@ -1,0 +1,38 @@
+h2 {
+    text-align: center;
+    color: #007bff;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .toolbar {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  button {
+    margin-right: 5px;
+    padding: 8px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .diagram-container {
+    width: 100%;
+    height: 600px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+  }
+  
+  textarea {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
