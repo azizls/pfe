@@ -5,11 +5,7 @@
   "projects": {
     "plateforme": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -30,7 +26,7 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           },
@@ -61,25 +57,25 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "buildTarget": "plateforme:build"
-          },
-          "configurations": {
-            "production": {
-              "buildTarget": "plateforme:build:production"
-            },
-            "development": {
-              "buildTarget": "plateforme:build:development"
-            }
-          },
-          "defaultConfiguration": "development"
+"serve": {
+  "builder": "@angular-devkit/build-angular:dev-server",
+  "options": {
+    "browserTarget": "plateforme:build"
+  },
+  "configurations": {
+    "production": {
+      "browserTarget": "plateforme:build:production"
+    },
+    "development": {
+      "browserTarget": "plateforme:build:development"
+    }
+  },
+  "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "plateforme:build"
+            "browserTarget": "plateforme:build"
           }
         },
         "test": {
@@ -96,7 +92,7 @@
             ],
             "styles": [
               "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "scripts": []
           }
