@@ -1,34 +1,23 @@
 <!-- Barre d'outils supérieure -->
-<mat-toolbar color="primary">
-    <span>BI Platform</span>
-    <span class="spacer"></span>
-    <button mat-button routerLink="/warehouse-designer">
-      <mat-icon>storage</mat-icon>
-      Data Warehouse
-    </button>
-  </mat-toolbar>
+
   
   <!-- Section Hero avec vidéo animée en fond -->
-  <div class="hero-video">
-    <video autoplay muted loop class="video-background">
-      <source src="/assets/home-video.mp4" type="video/mp4">
-      Votre navigateur ne supporte pas la balise vidéo.
-    </video>
-    <!-- Overlay pour contenir le contenu de la page d'accueil -->
-    <div class="hero-overlay">
-      <mat-card class="hero-card">
-        <mat-card-title>Bienvenue sur la BI Platform</mat-card-title>
-        <mat-card-content>
-          <p>Transformez vos données en insights performants.</p>
-          <p>Utilisez notre outil de conception pour créer votre propre Data Warehouse sur mesure.</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <!-- Bouton qui redirige vers la page de conception -->
-          <button mat-raised-button color="accent" routerLink="/warehouse-designer">
-            Accéder au Data Warehouse
-          </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+  <!-- Section Hero avec GIF animé en fond -->
+<!-- Section Hero avec GIF en fond -->
+<div class="hero-video">
+  <img src="assets/home-animation.gif" alt="Animation" class="gif-background">
+  <div class="hero-overlay">
+    <mat-card class="hero-card">
+      <mat-card-title>Bienvenue sur la BI Platform</mat-card-title>
+      <mat-card-content>
+        <p>Transformez vos données en insights performants.</p>
+        <p>Utilisez notre outil de conception pour créer votre propre Data Warehouse sur mesure.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="accent" routerLink="/warehouse-designer">
+          Accéder au Data Warehouse
+        </button>
+      </mat-card-actions>
+    </mat-card>
   </div>
-  
+</div>

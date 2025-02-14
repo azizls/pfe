@@ -21,6 +21,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { HomeComponent } from './home/home.component';
+import { MappingComponent } from './mapping/mapping.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 
 
 
@@ -28,7 +31,8 @@ import { HomeComponent } from './home/home.component';
   declarations: [
     AppComponent,
     WarehouseDesignerComponent,
-    HomeComponent
+    HomeComponent,
+    MappingComponent
     
   ],
   imports: [
@@ -50,7 +54,8 @@ import { HomeComponent } from './home/home.component';
     MatIconModule,
     MatButtonModule,
     MatListModule,
-    MatMenuModule
+    MatMenuModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]
