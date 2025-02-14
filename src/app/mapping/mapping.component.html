@@ -1,0 +1,41 @@
+<p>mapping works!</p>
+<div class="mapping-container">
+    <!-- Section d'importation de fichier -->
+    <mat-card>
+      <mat-card-title>Importer un fichier CSV/Excel</mat-card-title>
+      <mat-card-content>
+        <input type="file" (change)="onFileSelected($event)" 
+               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+      </mat-card-content>
+    </mat-card>
+  
+    <!-- Zone de mapping (affichage des colonnes) -->
+    <div class="mapping-lists" *ngIf="fileColumns.length && dbColumns.length">
+      <!-- Liste des colonnes du fichier -->
+      <div class="file-columns" cdkDropList [cdkDropListData]="fileColumns" (cdkDropListDropped)="drop($event)">
+        <h3>Colonnes du fichier</h3>
+        <div class="column-item" *ngFor="let col of fileColumns" cdkDrag>
+          {{ col }}
+        </div>
+      </div>
+  
+      <!-- Liste des colonnes de la base de données -->
+      <div class="db-columns" cdkDropList [cdkDropListData]="dbColumns" (cdkDropListDropped)="drop($event)">
+        <h3>Colonnes de la BD</h3>
+        <div class="column-item" *ngFor="let col of dbColumns" cdkDrag>
+          {{ col }}
+        </div>
+      </div>
+    </div>
+  
+    <!-- Affichage du mapping réalisé -->
+    <div class="mapping-result" *ngIf="mapping.length">
+      <h3>Correspondances effectuées :</h3>
+      <ul>
+        <li *ngFor="let map of mapping">
+          Fichier: <strong>{{ map.fileColumn }}</strong> → BD: <strong>{{ map.dbColumn }}</strong>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
