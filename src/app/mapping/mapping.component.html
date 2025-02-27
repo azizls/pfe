@@ -1,41 +1,61 @@
-<p>mapping works!</p>
 <div class="mapping-container">
-    <!-- Section d'importation de fichier -->
+    <!-- Saisie de la base de données -->
     <mat-card>
-      <mat-card-title>Importer un fichier CSV/Excel</mat-card-title>
+      <mat-card-title>Nom de la base de données</mat-card-title>
       <mat-card-content>
-        <input type="file" (change)="onFileSelected($event)" 
-               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+        <mat-form-field appearance="fill">
+          <mat-label>Entrez le nom de la base</mat-label>
+          <input matInput [(ngModel)]="databaseName">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="fetchTables()">Chercher Tables</button>
       </mat-card-content>
     </mat-card>
   
-    <!-- Zone de mapping (affichage des colonnes) -->
-    <div class="mapping-lists" *ngIf="fileColumns.length && dbColumns.length">
-      <!-- Liste des colonnes du fichier -->
-      <div class="file-columns" cdkDropList [cdkDropListData]="fileColumns" (cdkDropListDropped)="drop($event)">
-        <h3>Colonnes du fichier</h3>
-        <div class="column-item" *ngFor="let col of fileColumns" cdkDrag>
+    <!-- Affichage des tables disponibles -->
+    <div *ngIf="availableTables.length">
+      <h3>Tables disponibles</h3>
+      <mat-radio-group [(ngModel)]="selectedTable" (ngModelChange)="onTableSelected()">
+        <mat-radio-button *ngFor="let table of availableTables" [value]="table">
+          {{ table }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+  
+    <!-- Importation du fichier -->
+    <mat-card style="margin-top: 20px;">
+      <mat-card-title>Importer un fichier CSV/Excel</mat-card-title>
+      <mat-card-content>
+        <input type="file" (change)="onFileSelected($event)">
+      </mat-card-content>
+    </mat-card>
+  
+    <!-- Zone de drag & drop pour mapping -->
+    <div class="drag-drop-container" *ngIf="excelColumns.length && selectedTable">
+      <div id="excelList" class="drag-drop-column" cdkDropList 
+           [cdkDropListData]="excelColumns"
+           [cdkDropListConnectedTo]="['dbList']"
+           (cdkDropListDropped)="drop($event)">
+        <h3>Colonnes Excel</h3>
+        <div class="list-item" *ngFor="let col of excelColumns" cdkDrag [cdkDragData]="col">
           {{ col }}
         </div>
       </div>
   
-      <!-- Liste des colonnes de la base de données -->
-      <div class="db-columns" cdkDropList [cdkDropListData]="dbColumns" (cdkDropListDropped)="drop($event)">
-        <h3>Colonnes de la BD</h3>
-        <div class="column-item" *ngFor="let col of dbColumns" cdkDrag>
+      <div id="dbList" class="drag-drop-column" cdkDropList 
+           [cdkDropListData]="dbColumnsMap[selectedTable]"
+           [cdkDropListConnectedTo]="['excelList']"
+           (cdkDropListDropped)="drop($event)">
+        <h3>Colonnes de la table {{ selectedTable }}</h3>
+        <div class="list-item" *ngFor="let col of dbColumnsMap[selectedTable]" cdkDrag [cdkDragData]="col">
           {{ col }}
         </div>
       </div>
     </div>
   
-    <!-- Affichage du mapping réalisé -->
-    <div class="mapping-result" *ngIf="mapping.length">
-      <h3>Correspondances effectuées :</h3>
-      <ul>
-        <li *ngFor="let map of mapping">
-          Fichier: <strong>{{ map.fileColumn }}</strong> → BD: <strong>{{ map.dbColumn }}</strong>
-        </li>
-      </ul>
+    <!-- Boutons d'action -->
+    <div class="actions" style="margin-top:20px;">
+      <button mat-raised-button color="primary" (click)="loadAndSendDimension()">Charger la Dimension</button>
+      <button mat-raised-button color="accent" (click)="sendFactTable()">Charger la Fact</button>
     </div>
   </div>
   

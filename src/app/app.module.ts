@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { DatabaseService } from './services/database.service';
 import { HttpClientModule } from '@angular/common/http';
 
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +24,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { HomeComponent } from './home/home.component';
 import { MappingComponent } from './mapping/mapping.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatTableModule } from '@angular/material/table';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+
+
 
 
 
@@ -32,7 +39,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     AppComponent,
     WarehouseDesignerComponent,
     HomeComponent,
-    MappingComponent
+    MappingComponent,
+    ChatbotComponent
     
   ],
   imports: [
@@ -55,7 +63,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatButtonModule,
     MatListModule,
     MatMenuModule,
-    DragDropModule
+    DragDropModule,
+    MatTableModule,
+    MatRadioModule,
+    MatTooltipModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

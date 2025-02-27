@@ -13,23 +13,26 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/plateforme",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
-            "tsConfig": "tsconfig.app.json",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.css"
-            ],
-            "scripts": []
-          },
+  "outputPath": "dist/plateforme",
+  "index": "src/index.html",
+  "main": "src/main.ts",
+  "polyfills": [
+    "zone.js"
+  ],
+  "tsConfig": "tsconfig.app.json",
+  "assets": [
+    "src/favicon.ico",
+    "src/assets"
+  ],
+  "styles": [
+    "@angular/material/prebuilt-themes/indigo-pink.css",
+    "src/styles.css"
+  ],
+  "scripts": [],
+  "allowedCommonJsDependencies": [
+    "papaparse"
+  ]
+},
           "configurations": {
             "production": {
               "budgets": [
@@ -57,20 +60,20 @@
           },
           "defaultConfiguration": "production"
         },
-"serve": {
-  "builder": "@angular-devkit/build-angular:dev-server",
-  "options": {
-    "browserTarget": "plateforme:build"
-  },
-  "configurations": {
-    "production": {
-      "browserTarget": "plateforme:build:production"
-    },
-    "development": {
-      "browserTarget": "plateforme:build:development"
-    }
-  },
-  "defaultConfiguration": "development"
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "plateforme:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "plateforme:build:production"
+            },
+            "development": {
+              "browserTarget": "plateforme:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

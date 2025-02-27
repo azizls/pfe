@@ -1,38 +1,33 @@
-h2 {
-    text-align: center;
-    color: #007bff;
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  .toolbar {
-    margin-bottom: 10px;
-    text-align: center;
-  }
-  
-  button {
-    margin-right: 5px;
-    padding: 8px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  .diagram-container {
-    width: 100%;
-    height: 600px;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-  }
-  
-  textarea {
-    width: 100%;
-    margin-top: 10px;
-  }
-  
+.full-width {
+  width: 100%;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 16px 0;
+}
+
+.options-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.diagram-container {
+  width: 100%;
+  height: 600px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fafafa;
+}
+
+textarea[matInput] {
+  font-family: "Courier New", monospace;
+  color: #3f51b5;
+  background-color: #f4f4f4;
+}

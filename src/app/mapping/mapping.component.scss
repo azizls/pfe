@@ -1,31 +1,67 @@
 .mapping-container {
-    padding: 16px;
-  }
-  
-  .mapping-lists {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-  }
-  
-  .file-columns, .db-columns {
-    width: 45%;
-    border: 1px dashed #ccc;
-    min-height: 200px;
-    padding: 8px;
-    border-radius: 4px;
-  }
-  
-  .column-item {
-    padding: 8px;
-    margin: 4px;
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: move;
-  }
-  
-  .mapping-result {
-    margin-top: 20px;
-  }
-  
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.drag-drop-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.drag-drop-card {
+  width: 100%;
+}
+
+.drag-drop-columns {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.drag-drop-column {
+  flex: 1;
+  padding: 10px;
+  border: 2px dashed #3f51b5;
+  border-radius: 8px;
+  min-height: 200px;
+  background: #f5f5f5;
+  text-align: center;
+}
+
+.list-item {
+  padding: 8px;
+  margin: 4px;
+  background: #3f51b5;
+  color: white;
+  border-radius: 4px;
+  cursor: grab;
+}
+
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.preview-table th, .preview-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.preview-table th {
+  background-color: #3f51b5;
+  color: white;
+  text-align: left;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+mat-card {
+  margin-bottom: 20px;
+}

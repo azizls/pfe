@@ -1,64 +1,71 @@
 <div class="container" style="margin: 16px;">
   <mat-card>
     <mat-card-content>
-      <!-- Champ pour le nom de la base de données -->
+
+      <!-- 🟢 Champ pour le nom de la base de données -->
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Nom de la base de données</mat-label>
         <input matInput id="dbName" [(ngModel)]="databaseName" placeholder="Entrez le nom de la base de données">
       </mat-form-field>
-      
-      <h2 style="margin-top: 8px;">{{ databaseName }}</h2>
-      
-      <!-- Barre d'outils avec les actions -->
-      <div class="toolbar" style="display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0;">
+
+      <h2 style="margin-top: 8px; text-align: center; color: #3f51b5;">{{ databaseName }}</h2>
+
+      <!-- 🟢 Barre d'outils avec les actions -->
+      <div class="toolbar action-buttons">
         <button mat-raised-button color="primary" (click)="addTable()">
-          <mat-icon>table_chart</mat-icon>
-          Ajouter une Table
+          <mat-icon>table_chart</mat-icon> Ajouter une Table
         </button>
         <button mat-raised-button color="accent" (click)="addAttribute()">
-          <mat-icon>note_add</mat-icon>
-          Ajouter un Attribut
+          <mat-icon>note_add</mat-icon> Ajouter un Attribut
         </button>
         <button mat-raised-button color="primary" (click)="addRelation()">
-          <mat-icon>link</mat-icon>
-          Ajouter une Relation
+          <mat-icon>link</mat-icon> Ajouter une Relation
         </button>
         <button mat-raised-button color="warn" (click)="removeTable()">
-          <mat-icon>delete</mat-icon>
-          Supprimer une Table
+          <mat-icon>delete</mat-icon> Supprimer une Table
         </button>
         <button mat-raised-button color="warn" (click)="removeRelation()">
-          <mat-icon>link_off</mat-icon>
-          Supprimer une Relation
+          <mat-icon>link_off</mat-icon> Supprimer une Relation
         </button>
         <button mat-raised-button color="warn" (click)="removeAttribute()">
-          <mat-icon>remove_circle</mat-icon>
-          Supprimer un Attribut
+          <mat-icon>remove_circle</mat-icon> Supprimer un Attribut
         </button>
         <button mat-raised-button color="primary" (click)="exportModel()">
-          <mat-icon>publish</mat-icon>
-          Créer la base de données 
+          <mat-icon>publish</mat-icon> Créer la base de données
         </button>
       </div>
-      
-      <!-- Combobox pour sélectionner le type d'attribut (types de base SQL Server) -->
-      <mat-form-field appearance="fill" class="full-width" style="margin-bottom: 16px;">
-        <mat-label>Type d'attribut</mat-label>
-        <mat-select [(value)]="selectedAttributeType">
-          <mat-option *ngFor="let type of attributeTypes" [value]="type">
-            {{ type }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      
-      <!-- Zone de diagramme -->
-      <div #diagramDiv class="diagram-container" style="width: 100%; height: 600px; border: 1px solid #ccc; border-radius: 4px;"></div>
-      
-      <!-- Zone d'affichage du JSON exporté -->
-      <h3 style="margin-top: 16px;">📜 Requête JSON :</h3>
-      <mat-form-field appearance="fill" class="full-width">
+
+      <!-- 🟢 Sélection du type d'attribut -->
+      <div class="options-container">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Type d'attribut</mat-label>
+          <mat-select [(value)]="selectedAttributeType">
+            <mat-option *ngFor="let type of attributeTypes" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- 🟢 Sélection du type de clé (Aucun, PK, FK) -->
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Type de clé</mat-label>
+          <mat-select [(value)]="selectedKeyType">
+            <mat-option value="Aucun">Aucun</mat-option>
+            <mat-option value="Clé primaire">Clé primaire</mat-option>
+            <mat-option value="Clé étrangère">Clé étrangère</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- 🟢 Zone de diagramme -->
+      <div #diagramDiv class="diagram-container"></div>
+
+      <!-- 🟢 Zone d'affichage du JSON exporté -->
+      <h3 style="margin-top: 16px; text-align: center;">📜 Requête JSON :</h3>
+      <mat-form-field appearance="outline" class="full-width">
         <textarea matInput [value]="jsonOutput" rows="10" readonly></textarea>
       </mat-form-field>
+
     </mat-card-content>
   </mat-card>
 </div>

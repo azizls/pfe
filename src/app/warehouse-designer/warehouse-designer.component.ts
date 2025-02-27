@@ -8,6 +8,7 @@ interface TableColumn {
   type: string;
   primaryKey?: boolean;
   foreignKey?: boolean;
+  referenceTable?: string;
 }
 
 interface TableNode {
@@ -19,6 +20,7 @@ interface TableNode {
 interface TableLink {
   from: number;
   to: number;
+  relationName?: string;
 }
 
 @Component({
@@ -33,19 +35,12 @@ export class WarehouseDesignerComponent implements OnInit {
   databaseName: string = 'MyDatabase';
 
   attributeTypes: string[] = [
-    "INT",
-    "VARCHAR",
-    "NVARCHAR",
-    "DATETIME",
-    "BIT",
-    "DECIMAL",
-    "FLOAT",
-    "CHAR",
-    "NCHAR"
+    "INT", "VARCHAR", "NVARCHAR", "DATETIME", "BIT",
+    "DECIMAL", "FLOAT", "CHAR", "NCHAR"
   ];
 
-  // Type d'attribut par défaut
   selectedAttributeType: string = "VARCHAR";
+  selectedKeyType: string = "Aucun";
 
   constructor(
     private DatabaseService: DatabaseService,
@@ -69,97 +64,53 @@ export class WarehouseDesignerComponent implements OnInit {
 
     this.diagram.model = new go.GraphLinksModel({ nodeKeyProperty: 'key' });
 
-    // Créer le binding séparément pour la conversion de primaryKey
-    const primaryKeyBinding = new go.Binding("text", "primaryKey") as any;
-    primaryKeyBinding.converter = (pk: boolean) => pk ? '🔑' : '';
-
-    // Template du noeud amélioré
+    // 📌 Template des tables
     this.diagram.nodeTemplate =
       new go.Node("Auto")
-        .add(
-          new go.Shape("RoundedRectangle", {
-            fill: new go.Brush("Linear", { 0: "lightblue", 1: "white" }),
-            stroke: "#4682B4",
-            strokeWidth: 2
-          })
-        )
+        .add(new go.Shape("RoundedRectangle", { fill: "#e0f7fa", stroke: "#0288d1", strokeWidth: 2 }))
         .add(
           new go.Panel("Vertical")
+            .add(new go.TextBlock({
+              margin: 8,
+              font: "bold 14px sans-serif",
+              editable: true
+            }).bind(new go.Binding("text", "name").makeTwoWay()))
+
             .add(
-              new go.TextBlock({
-                margin: 8,
-                font: "bold 16px Roboto, sans-serif",
-                editable: true,
-                stroke: "#333"
-              }).bind(new go.Binding("text", "name").makeTwoWay())
-            )
-            .add(
-              (() => {
-                const panel = new go.Panel("Vertical");
-                panel.bind(new go.Binding("itemArray", "columns").makeTwoWay());
-                panel.itemTemplate = new go.Panel("Horizontal")
-                  .add(
-                    new go.TextBlock({
+              new go.Panel("Vertical", { name: "COLUMN_PANEL", itemTemplate: 
+                  new go.Panel("Horizontal")
+                    .add(new go.TextBlock({
                       margin: 4,
-                      font: "14px Roboto, sans-serif",
-                      editable: true,
-                      stroke: "#555"
-                    }).bind(new go.Binding("text", "name").makeTwoWay())
-                  )
-                  .add(
-                    new go.TextBlock({
+                      font: "12px sans-serif",
+                      editable: true
+                    }).bind(new go.Binding("text", "name").makeTwoWay()))
+
+                    .add(new go.TextBlock({
                       margin: 4,
-                      font: "14px Roboto, sans-serif",
-                      editable: true,
+                      font: "12px sans-serif",
                       stroke: "gray"
-                    }).bind(new go.Binding("text", "type").makeTwoWay())
-                  )
-                  .add(
-                    new go.TextBlock({
+                    }).bind(new go.Binding("text", "type")))
+
+                    .add(new go.TextBlock({
                       margin: 4,
-                      font: "14px Roboto, sans-serif",
-                      stroke: "red",
-                      editable: false
-                    }).bind(primaryKeyBinding)
-                  );
-                return panel;
-              })()
+                      font: "12px sans-serif",
+                      stroke: "red"
+                    }).bind(new go.Binding("text", "", (col: any) => col.primaryKey ? "🔑" : (col.foreignKey ? "🔗" : ""))))
+              })
+              .bind(new go.Binding("itemArray", "columns"))
             )
         );
 
-    // Template du lien amélioré
+    // 📌 Template des relations
     this.diagram.linkTemplate =
-      new go.Link({
-        routing: go.Link.AvoidsNodes,
-        corner: 10,
-        relinkableFrom: true,
-        relinkableTo: true,
-        reshapable: true,
-        curve: go.Link.JumpOver
-      })
-        .add(new go.Shape({ strokeWidth: 2, stroke: "#333" }))
-        .add(new go.Shape({ toArrow: "Standard", stroke: "#333", fill: "#333" }))
-        .add(
-          new go.TextBlock({
-            segmentOffset: new go.Point(0, -10),
-            font: "bold 12px Roboto, sans-serif",
-            stroke: "#333"
-          }).bind(new go.Binding("text", "", this.getTableNames).ofObject())
-        );
-
-    const model = this.diagram.model as go.GraphLinksModel;
-    model.nodeDataArray = [
-      { key: 1, name: 'Users', columns: [{ name: 'id', type: 'INT', primaryKey: true }, { name: 'name', type: 'VARCHAR' }] },
-      { key: 2, name: 'Orders', columns: [{ name: 'id', type: 'INT', primaryKey: true }, { name: 'user_id', type: 'INT', foreignKey: true }] },
-      { key: 3, name: 'Payments', columns: [{ name: 'id', type: 'INT', primaryKey: true }, { name: 'order_id', type: 'INT', foreignKey: true }] }
-    ];
-    model.linkDataArray = [{ from: 1, to: 2 }, { from: 2, to: 3 }];
-  }
-
-  private getTableNames(link: go.Link): string {
-    const fromNode = link.fromNode?.data as TableNode;
-    const toNode = link.toNode?.data as TableNode;
-    return `${fromNode?.name || 'TableA'} → ${toNode?.name || 'TableB'}`;
+      new go.Link({ routing: go.Link.AvoidsNodes, curve: go.Link.JumpOver })
+        .add(new go.Shape({ strokeWidth: 2 }))
+        .add(new go.Shape({ toArrow: "Standard" }))
+        .add(new go.TextBlock({
+          segmentOffset: new go.Point(0, -10),
+          font: "bold 12px sans-serif",
+          stroke: "#333"
+        }).bind(new go.Binding("text", "relationName")));
   }
 
   addTable() {
@@ -168,59 +119,95 @@ export class WarehouseDesignerComponent implements OnInit {
     model.startTransaction("Ajout de table");
     model.addNodeData({
       key: newKey,
-      name: 'NewTable',
+      name: `Table_${newKey}`,
       columns: [{ name: 'id', type: 'INT', primaryKey: true }]
     });
     model.commitTransaction("Ajout de table");
     this.snackBar.open('Table ajoutée', 'OK', { duration: 2000 });
   }
 
-  removeTable() {
-    const selectedNode = this.diagram.selection.first();
-    if (selectedNode instanceof go.Node) {
-      const model = this.diagram.model as go.GraphLinksModel;
-      model.startTransaction("Suppression de table");
-      model.removeNodeData(selectedNode.data);
-      model.commitTransaction("Suppression de table");
-      this.snackBar.open('Table supprimée', 'OK', { duration: 2000 });
-    } else {
-      this.snackBar.open('Sélectionnez une table à supprimer.', 'OK', { duration: 2000 });
-    }
-  }
 
-    addAttribute() {
+  addAttribute() {
     const selectedNode = this.diagram.selection.first();
     if (selectedNode instanceof go.Node) {
       const model = this.diagram.model as go.GraphLinksModel;
       const nodeData = selectedNode.data as TableNode;
+
       if (nodeData && nodeData.columns) {
         model.startTransaction("Ajout d'attribut");
-        // Utilise le type choisi dans le combobox pour le nouvel attribut
-        const newColumns = [...nodeData.columns, { name: 'NewColumn', type: this.selectedAttributeType }];
+
+        let newColumn: TableColumn = {
+          name: 'NewColumn',
+          type: this.selectedAttributeType
+        };
+
+        if (this.selectedKeyType === "Clé primaire") {
+          newColumn.primaryKey = true;
+        } else if (this.selectedKeyType === "Clé étrangère") {
+          newColumn.foreignKey = true;
+
+          // 📌 Demander la table de référence
+          const tableNames = this.diagram.model.nodeDataArray
+            .map((node: any) => node.name)
+            .filter((name: string) => name !== nodeData.name);
+
+          const selectedTable = prompt("Sélectionnez la table de référence :\n" + tableNames.join("\n"));
+
+          if (selectedTable && tableNames.includes(selectedTable)) {
+            this.snackBar.open(`Clé étrangère liée à ${selectedTable}`, 'OK', { duration: 3000 });
+
+            // 📌 Associer la clé étrangère
+            newColumn.name = `${selectedTable}_id`;
+            newColumn.referenceTable = selectedTable;
+
+            // 📌 Trouver la clé primaire de la table référencée
+            const refTable = model.nodeDataArray.find((node: any) => node.name === selectedTable) as TableNode;
+            const primaryKeyColumn = refTable.columns.find(col => col.primaryKey);
+            if (primaryKeyColumn) {
+              newColumn.type = primaryKeyColumn.type;
+            }
+
+            // 📌 Ajout automatique de la relation
+            model.addLinkData({ from: this.getTableKey(selectedTable), to: nodeData.key });
+          } else {
+            this.snackBar.open('Aucune table valide sélectionnée.', 'OK', { duration: 3000 });
+            model.commitTransaction("Ajout d'attribut");
+            return;
+          }
+        }
+
+        const newColumns = [...nodeData.columns, newColumn];
         model.setDataProperty(nodeData, 'columns', newColumns);
         model.commitTransaction("Ajout d'attribut");
-        this.snackBar.open('Attribut ajouté', 'OK', { duration: 2000 });
+
+        this.snackBar.open('Attribut ajouté avec succès !', 'OK', { duration: 2000 });
       }
     } else {
       this.snackBar.open('Sélectionnez une table avant d\'ajouter un attribut.', 'OK', { duration: 2000 });
     }
   }
 
-  
+
   addRelation() {
     const selectedNodes = this.diagram.selection.toArray();
     if (selectedNodes.length === 2 && selectedNodes[0] instanceof go.Node && selectedNodes[1] instanceof go.Node) {
       const model = this.diagram.model as go.GraphLinksModel;
       const fromNode = selectedNodes[0].data as TableNode;
       const toNode = selectedNodes[1].data as TableNode;
+
+      const relationName = prompt("Entrez le nom de la relation entre ces tables :") || "Relation";
+
       model.startTransaction("Ajout de relation");
-      model.addLinkData({ from: fromNode.key, to: toNode.key });
+      model.addLinkData({ from: fromNode.key, to: toNode.key, relationName: relationName });
       model.commitTransaction("Ajout de relation");
-      this.snackBar.open('Relation ajoutée', 'OK', { duration: 2000 });
+      this.snackBar.open(`Relation ajoutée : ${relationName}`, 'OK', { duration: 2000 });
     } else {
       this.snackBar.open('Sélectionnez exactement deux tables pour créer une relation.', 'OK', { duration: 2000 });
     }
   }
+
+
+
 
   removeRelation() {
     const selectedLink = this.diagram.selection.first();
@@ -232,6 +219,22 @@ export class WarehouseDesignerComponent implements OnInit {
       this.snackBar.open('Relation supprimée', 'OK', { duration: 2000 });
     } else {
       this.snackBar.open('Sélectionnez une relation à supprimer.', 'OK', { duration: 2000 });
+    }
+  }
+
+ 
+
+
+  removeTable() {
+    const selectedNode = this.diagram.selection.first();
+    if (selectedNode instanceof go.Node) {
+      const model = this.diagram.model as go.GraphLinksModel;
+      model.startTransaction("Suppression de table");
+      model.removeNodeData(selectedNode.data);
+      model.commitTransaction("Suppression de table");
+      this.snackBar.open('Table supprimée', 'OK', { duration: 2000 });
+    } else {
+      this.snackBar.open('Sélectionnez une table à supprimer.', 'OK', { duration: 2000 });
     }
   }
 
@@ -254,6 +257,12 @@ export class WarehouseDesignerComponent implements OnInit {
     }
   }
 
+  getTableKey(tableName: string): number {
+    const model = this.diagram.model as go.GraphLinksModel;
+    const table = model.nodeDataArray.find((node: any) => node.name === tableName);
+    return table ? table['key'] : -1;
+  }
+
   exportModel() {
     const model = this.diagram.model as go.GraphLinksModel;
     const nodeDataArray: TableNode[] = model.nodeDataArray as TableNode[];
@@ -268,12 +277,14 @@ export class WarehouseDesignerComponent implements OnInit {
           name: col.name,
           type: col.type,
           primaryKey: col.primaryKey || false,
-          foreignKey: col.foreignKey || false
+          foreignKey: col.foreignKey || false,
+          referenceTable: col.referenceTable || null
         }))
       })),
       relations: linkDataArray.map(link => ({
         fromTable: nodeDataArray.find(node => node.key === link.from)?.name || 'Unknown',
-        toTable: nodeDataArray.find(node => node.key === link.to)?.name || 'Unknown'
+        toTable: nodeDataArray.find(node => node.key === link.to)?.name || 'Unknown',
+        relationName: link.relationName || ""
       }))
     };
 
@@ -282,12 +293,12 @@ export class WarehouseDesignerComponent implements OnInit {
 
     this.DatabaseService.createDatabase(jsonOutput).subscribe(
       response => {
-        console.log('✅ Données envoyées avec succès !', response);
-        this.snackBar.open('Données envoyées avec succès !', 'OK', { duration: 2000 });
+        console.log('✅ Base créée avec succès !', response);
+        this.snackBar.open('Base créée avec succès !', 'OK', { duration: 2000 });
       },
       error => {
-        console.error('❌ Erreur lors de l\'envoi des données', error);
-        this.snackBar.open('Erreur lors de l\'envoi des données.', 'OK', { duration: 2000 });
+        console.error('❌ Erreur lors de la création de la base', error);
+        this.snackBar.open('Erreur lors de la création de la base.', 'OK', { duration: 2000 });
       }
     );
   }

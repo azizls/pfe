@@ -14,3 +14,28 @@
   <app-root></app-root>
 </body>
 </html>
+
+<script>
+  !(function () {
+    let script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/rasa-webchat/lib/index.js";
+    script.async = true;
+    script.onload = () => {
+      window.WebChat.default(
+        {
+          initPayload: "/greet",
+          customData: { language: "en" },
+          socketUrl: "http://localhost:5005",
+          title: "Chatbot",
+          subtitle: "Posez vos questions !",
+          showMessageDate: true,
+          params: {
+            storage: "session",
+          },
+        },
+        null
+      );
+    };
+    document.head.appendChild(script);
+  })();
+</script>
